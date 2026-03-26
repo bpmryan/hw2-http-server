@@ -1,6 +1,7 @@
 {
   "name": "hw2-http-server",
   "version": "1.0.0",
+  "type": "module",
   "description": "Advanced Web Dev project",
   "main": "index.js",
   "scripts": {
@@ -13,7 +14,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/bpmryan/hw2-http-server/issues"
   },
