@@ -9,20 +9,20 @@ const PORT = 3000;
 const server = http.createServer(async (req, res) => {
   // step 3: adding routes
   const url = req.url;
-  const method = req.method;
+  //   const method = req.method;
 
   // Route handling
-//   if (url === "/" && method === "GET") {
-//     res.writeHead(200, { "Content-Type": "text/html" });
-//     res.end("<h1>About Page<h1>");
-//   } else if (url === "/api/data" && method === "GET") {
-//     res.writeHead(200, { "Content-Type": "application/json" });
-//     res.end(JSON.stringify({ message: "Hello", timestamp: Date.now() }));
-//   } else {
-//     // 404 not found
-//     res.writeHead(404, { "Content-Type": "text/html" });
-//     res.end("<h1>404 - Page Not Found</h1>");
-//   }
+  //   if (url === "/" && method === "GET") {
+  //     res.writeHead(200, { "Content-Type": "text/html" });
+  //     res.end("<h1>About Page<h1>");
+  //   } else if (url === "/api/data" && method === "GET") {
+  //     res.writeHead(200, { "Content-Type": "application/json" });
+  //     res.end(JSON.stringify({ message: "Hello", timestamp: Date.now() }));
+  //   } else {
+  //     // 404 not found
+  //     res.writeHead(404, { "Content-Type": "text/html" });
+  //     res.end("<h1>404 - Page Not Found</h1>");
+  //   }
 
   //step 5: route to static files
   if (url === "/" || url === "index.html") {
@@ -52,6 +52,36 @@ const server = http.createServer(async (req, res) => {
     res.end(
       JSON.stringify({ message: "Hello!", time: new Date().toISOString() }),
     );
+  }
+  // step 6: handling post requests
+  else if (url === "/api/contact" && req.method === "POST") {
+    let body = "";
+    // collect data chunks
+    req.on("data", (chunk) => {
+      body += chunk.toString();
+    });
+
+    // process when complete
+    req.on("end", () => {
+      try {
+        const data = JSON.parse(body);
+        console.log("Received: ", data);
+
+        res.writeHead(200, {
+          "Content-Type": "application/json",
+        });
+
+        res.end(
+          JSON.stringify({
+            success: true,
+            message: "Data received!",
+          }),
+        );
+      } catch (error) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Invalid JSON" }));
+      }
+    });
   } else {
     res.writeHead(404, { "Content-Type": "text/html" });
     res.end("<h1>404 - Not Found</h1>");
