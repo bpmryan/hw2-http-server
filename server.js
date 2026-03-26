@@ -1,9 +1,13 @@
 // Step 2: adding basic http server
 import http from 'http';
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLtoPath} from 'url';
 
 const PORT = 3000;
 
 const server = http.createServer((req, res) => {
+    // step 2
     // Log the request
     // console.log(`${req.method} ${req.url}`);
 
@@ -13,6 +17,7 @@ const server = http.createServer((req, res) => {
     // });
     // res.end('<h1>Hello World!</h1>');
 
+    // step 3
     const url = req.url;
     const method = req.method;
 
@@ -56,3 +61,19 @@ server.listen(PORT, () => {
 //         res.end('<h1>404 - Page Not Found</h1>');
 //     }
 // });
+
+// step 4: serving static files
+const filename = fileURLtoPath(import.meta.url);
+const dirname = path.dirname(filename);
+
+// helper function
+async function serveFile(filePath, contentType, res) {
+    try {
+        const data = await fs.readFile(filePath);
+        res.writeHead(200, {' Content-Type': contentType });
+        res.end(data);
+    } catch (error) {
+        res.writeHead(404, { 'Content-Type': 'text/html' });
+        res.end('<h1>404 - File Not Found </h1>');
+    }
+}
